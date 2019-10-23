@@ -110,16 +110,12 @@ variable a67450 : subclass Relation Abstract
 
 -- commented in list.kif
 variable novo1 : ∀ (x L : U), ins L Entity → ins L List → ins (ConsFn x L) List
-
 variable novo5 : ¬ (Vertebrate = Invertebrate) 
 
-
--- starting proofs
 
 -- some initial tests
 
 include a15 a71382 a71383 a71402 a72771
-
 lemma VertebrateAnimal : ∀ (x : U), ins x Vertebrate → ins x Animal := 
 begin 
  intros a h,
@@ -141,7 +137,8 @@ end
 omit a15 a72180 a71844 a67818 a13
 
 
-include a15 a72180 a71383 a71844 a13 a67818 a71402 a72771 a71371 a71382 a71369 a67809
+include a15 a72180 a71383 a71844 a13 a67818 a71402 a72771 a71371 a71382 
+        a71369 a67809
 
 lemma VertebrateOrganism : ∀ (x : U), ins x Vertebrate → ins x Organism := 
 begin 
@@ -155,24 +152,6 @@ begin
 end
 
 lemma VertebrateOrganism' : ∀ (x : U), ins x Vertebrate → ins x Organism := 
-begin
-  intros x h,
-  have h₁ : ins subclass_m TransitiveRelation,
-    specialize a15 PartialOrderingRelation TransitiveRelation subclass_m,
-    apply a15,
-      exact ⟨a72180, a71844⟩, -- tipa as relações como setorclass
-      exact ⟨a67818, a13⟩,    -- usa a "transitividade" do subclass sobre o ins
-  have h₂ : subclass Vertebrate Organism,
-    apply a67809 _  Animal _,
-      exact ⟨a71402, ⟨a72771, a71371⟩⟩,
-      exact h₁,
-      exact ⟨a71382, a71369⟩,
-  apply a15 Vertebrate _ _,
-    exact ⟨a71402, a71371⟩,
-    exact ⟨h₂, h⟩
-end
-
-lemma VertebrateOrganism'' : ∀ (x : U), ins x Vertebrate → ins x Organism := 
 begin
   intros a h,
   have h₁ : ins subclass_m TransitiveRelation,
@@ -189,11 +168,14 @@ begin
   exact ⟨a71402, a71371⟩,
   exact ⟨h₂, h⟩
 end
-omit a15 a72180 a71383 a71844 a13 a67818 a71402 a72771 a71371 a71382 a71369 a67809
+omit a15 a72180 a71383 a71844 a13 a67818 a71402 a72771 a71371 a71382 
+     a71369 a67809
+
 
 include a15 a72180 a71844 a13 a67818 a71402 a72771 a71371 
         a71369 a67809 a71382 a67174 a69763 a67331 a71669 a71340 
         a67315 a67177 a71872
+
 lemma VertebrateEntity : ∀ (x : U), ins x Vertebrate → ins x Entity := 
 begin
   intros a h, 
@@ -231,7 +213,11 @@ omit a15 a72180 a71844 a13 a67818 a71402 a72771 a71371
      a71369 a67809 a71382 a67174 a69763 a67331 a71669 a71340 
      a67315 a67177 a71872
 
-include a72767 a72768 a72769 a72770 a67959 a15 novo1 a67954 a67332 a67331 a68771 a68763 a67958 a67450
+
+-- start proofs
+
+include a72767 a72768 a72769 a72770 a67959 a15 novo1 a67954 a67332 a67331 
+        a68771 a68763 a67958 a67450
 
 lemma listLemma (hne : nonempty U) : ∀ x y z : U, 
   ins x Entity ∧ ins y Entity ∧ ins z Entity →
@@ -264,14 +250,16 @@ begin
               exact ((a72769 x) h.left) h3
 end
 
-omit a72767 a72768 a72769 a72770 a67959 a15 novo1 a67954 a67332 a67331 a68771 a68763 a67958 a67450
+omit a72767 a72768 a72769 a72770 a67959 a15 novo1 a67954 a67332 a67331 
+     a68771 a68763 a67958 a67450
 
--- start proofs
 
-include a67131 a67115 a67809 a67448 a68771 a67331 a15 a72180 a71844 a67818 a13 a67446 a67332 a72767 a72768 a72769 a72770 a67959  novo1 a67954 a68763 a67958 a67450
+include a67131 a67115 a67809 a67448 a68771 a67331 a15 a72180 a71844 a67818 a13 
+        a67446 a67332 a72767 a72768 a72769 a72770 a67959  novo1 a67954 a68763 
+        a67958 a67450
 
 lemma lX (hne : nonempty U) : ∀ x c c1 c2,
-(ins c SetOrClass ∧ ins c1 SetOrClass ∧ ins c2 SetOrClass) →
+  (ins c SetOrClass ∧ ins c1 SetOrClass ∧ ins c2 SetOrClass) →
   (ins c Class ∧ ins c1 Class ∧ ins c2 Class ∧ ins x Entity) → 
     (partition3 c c1 c2 ∧ ins x c ∧ ¬ ins x c1) → ins x c2 := 
 begin
@@ -318,9 +306,6 @@ begin
     exact h7.right
  end
 
-omit a67131 a67115 a67809 a67448 a68771 a67331 a15 a72180 a71844 a67818 a13 a67446 a67332 a72767 a72768 a72769 a72770 a67959  novo1 a67954 a68763 a67958 a67450
-
-
 include a72773 a72774 a72772
 lemma l0' (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) := by simp *
 
@@ -329,11 +314,9 @@ begin
   specialize a72773 BananaSlug10,
   exact a72773 (and.intro a72772 a72774)
 end
-omit a72773 a72774 a72772
 
+include a71371 a71872 a71669 a69763 a71369 a71340 a67315 a67177 a67174 a72771 a71402 a72778
 
-include a13 a15 a72771 a71371 a71872 a71669 a69763 a67331 a71844 a72180 a67818 
-        a67809 a71369 a71340 a67315 a67177 a67174
 lemma l1 (hne : nonempty U) : subclass Animal Entity :=
 begin
   have h : ins subclass_m TransitiveRelation,
@@ -345,18 +328,158 @@ begin
     apply (a67809 _ Object _),
       simp *,
       assumption,
-      simp *,
+      simp *,w
       apply (a67809 _  Agent _),
         simp *,
         assumption,
         simp *,  
         apply (a67809 _ Organism _),
-          simp *,
-          assumption,
-          simp *,  
+         simp *,
+         assumption,
+         simp *,  
 end
 
-include a71382 a71402
+include a67173 a71370 a71382 a71383
+
+lemma subclass_vertebrate_entity : subclass Vertebrate Entity :=
+begin
+  have h1, apply subclass_TransitiveRelation; assumption,
+  have h2 : subclass Vertebrate Organism,
+    apply a67809 _ Animal _,
+    exact ⟨a71402, ⟨ a72771, a71371 ⟩⟩,
+    exact h1,
+    exact ⟨a71382, a71369⟩,  
+  have h3 : subclass Vertebrate Agent,
+    apply a67809 _ Organism _,
+    exact ⟨a71402, ⟨ a71371, a71872 ⟩⟩,
+    exact h1,
+    exact ⟨h2, a71340⟩,
+  have h4 : subclass Vertebrate Object,
+    apply a67809 _ Agent _,
+    exact ⟨a71402, ⟨ a71872, a71669 ⟩⟩,
+    exact h1,
+    exact ⟨h3, a67315⟩,
+  have h5 : subclass Vertebrate Physical,
+    apply a67809 _ Object _,
+    exact ⟨a71402, ⟨ a71669, a69763 ⟩⟩,
+    exact h1,
+    exact ⟨h4, a67177⟩,
+  apply a67809 _ Physical _,
+  exact ⟨a71402, ⟨ a69763, a67331 ⟩⟩,
+  exact h1,
+  exact ⟨ h5, a67174 ⟩,
+end
+
+lemma subclass_invertebrate_entity : subclass Invertebrate Entity :=
+begin
+  have h1, apply subclass_TransitiveRelation; assumption,
+  have h2 : subclass Invertebrate Organism,
+    apply a67809 _ Animal _,
+    exact ⟨a72778, ⟨ a72771, a71371 ⟩⟩,
+    exact h1,
+    exact ⟨a71383, a71369⟩,  
+  have h3 : subclass Invertebrate Agent,
+    apply a67809 _ Organism _,
+    exact ⟨a72778, ⟨ a71371, a71872 ⟩⟩,
+    exact h1,
+    exact ⟨h2, a71340⟩,
+  have h4 : subclass Invertebrate Object,
+    apply a67809 _ Agent _,
+    exact ⟨a72778, ⟨ a71872, a71669 ⟩⟩,
+    exact h1,
+    exact ⟨h3, a67315⟩,
+  have h5 : subclass Invertebrate Physical,
+    apply a67809 _ Object _,
+    exact ⟨a72778, ⟨ a71669, a69763 ⟩⟩,
+    exact h1,
+    exact ⟨h4, a67177⟩,
+  apply a67809 _ Physical _,
+  exact ⟨a72778, ⟨ a69763, a67331 ⟩⟩,
+  exact h1,
+  exact ⟨ h5, a67174 ⟩,
+end
+
+
+lemma ins_banana_entity : ins BananaSlug10 Entity := 
+begin
+ have h1, apply subclass_TransitiveRelation; assumption,
+ have h2 : ins BananaSlug10 Organism, 
+  specialize a15 Animal Organism BananaSlug10,
+  apply a15,
+  exact and.intro a72771 a71371,
+  exact and.intro a71369 a72772,
+ have h3 : ins BananaSlug10 Agent, 
+  specialize a15 Organism Agent BananaSlug10,
+  apply a15,
+  exact and.intro a71371 a71872,
+  exact and.intro a71340 h2,
+ have h4 : ins BananaSlug10 Object, 
+  specialize a15 Agent Object BananaSlug10,
+  apply a15,
+  exact and.intro a71872 a71669,
+  exact and.intro a67315 h3,
+ have h5 : ins BananaSlug10 Physical, 
+  specialize a15 Object Physical BananaSlug10,
+  apply a15,
+  exact and.intro a71669 a69763,
+  exact and.intro a67177 h4,
+ specialize a15 Physical Entity BananaSlug10,
+ apply a15,
+ exact and.intro a69763 a67331,
+ exact and.intro a67174 h5,
+end
+
+
+lemma ins_vertebrate_class : ins Vertebrate Class :=
+begin
+ have h0 : subclass Vertebrate Entity,
+  apply subclass_vertebrate_entity; assumption,
+ have h1, from (a67173 Vertebrate),
+ exact h1.2 h0,
+end
+
+lemma ins_invertebrate_class : ins Invertebrate Class :=
+begin
+ have h0 : subclass Invertebrate Entity,
+  apply subclass_invertebrate_entity; assumption,
+ have h1, from (a67173 Invertebrate),
+ exact h1.2 h0,
+end
+
+
+theorem Banana_Invertebrate (hne: nonempty U) : ins BananaSlug10 Invertebrate :=
+begin
+ have h1 : ¬ ins BananaSlug10 Vertebrate,
+  apply l0; assumption,
+ have h2 : ∀ x c c1 c2,
+  (ins c SetOrClass ∧ ins c1 SetOrClass ∧ ins c2 SetOrClass) →
+  (ins c Class ∧ ins c1 Class ∧ ins c2 Class ∧ ins x Entity) → 
+   (partition3 c c1 c2 ∧ ins x c ∧ ¬ ins x c1) → ins x c2, 
+   apply lX; assumption,
+ have h3, from h2 BananaSlug10 Animal Vertebrate Invertebrate,
+ apply h3,
+ exact ⟨ a72771, ⟨ a71402, a72778 ⟩⟩,
+ have h₁ : subclass Animal Entity, 
+   apply l1; assumption,
+ have h₂ : ins Animal Class,
+   rw a67173, 
+   exact h₁,
+ have h₃ : ins Vertebrate Class, 
+  apply ins_vertebrate_class; assumption,
+ have h₄ : ins Invertebrate Class, 
+  apply ins_invertebrate_class; assumption,
+ have h₅ : ins BananaSlug10 Entity, 
+  apply ins_banana_entity; assumption,
+ exact and.intro h₂ (and.intro h₃ (and.intro h₄ h₅)),
+ exact and.intro a71370 (and.intro a72772 h1),
+end
+
+
+omit a67131 a67115 a67809 a67448 a68771 a67331 a15 a72180 a71844 a67818 a13 a67446 
+     a67332 a72767 a72768 a72769 a72770 a67959  novo1 a67954 a68763 a67958 a67450
+
+omit a72773 a72774 a72772
+
 
 lemma l2 (hne : nonempty U) : subclass Vertebrate Entity :=
 begin
@@ -387,15 +510,13 @@ begin
   simp *,
 end
 
-include a67173
 lemma l4 (hne : nonempty U): ins Invertebrate Class :=
 begin
   rw a67173,
   apply l3, repeat { assumption }
 end
 
-omit a13 a15 a72771 a71371 a71872 a71669 a69763 a67331 a71844 a72180 a67818 
-     a67809 a71369 a71340 a67315 a67177 a67174 a72778 a71383 
+omit a72771 a71371 a71872 a71669 a69763 a71369 a71340 a67315 a67177 a67174 a72778  
 
 
 include a72770 a72767 novo1 a67959 a67958 a67954 a67450 a15 a68771 a67332  a72769 
@@ -434,8 +555,8 @@ end
 omit a72770 a72767 novo1 a67959 a67958 a67954 a67450 a15 a68771 a67332 
      a72769 a68763 a67331 a67173
 
-include a13 a15 a72771 a71371 a71872 a71669 a69763 a67331 a71844 a72180 a67818 
-        a67809 a71369 a71340 a67315 a67177 a67174 a72778 a71383 a67173 a67448 
+include a13 a15 a67331 a71844 a72180 a67818 
+        a67809 a71383 a67173 a67448 
         a68771 a67446 a67332 a71402 novo1 a67954 a67450 a67131 a67115 a71370 
         a72772 a67958 a67959 a72770  a72767 a72761 a72774 a71382 a72769 a68763
 

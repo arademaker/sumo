@@ -4963,7 +4963,59 @@ do not have a fixed number of arguments.")
   (instance ?REL VariableArityRelation)
   (not
     (exists (?INT)
-    (valence ?REL ?INT))))
+	    (valence ?REL ?INT))))
+
+
+;; (=> (and
+;;      (instance ?REL VariableArityRelation)
+;;      (instance ?REL Predicate)
+;;      (?REL @ROW)
+;;      (equal ?A (ListOrderFn (ListFn @ROW) ?N))
+;;      (=> (domain ?REL ?N ?CLASS)
+;; 	 (instance ?A ?CLASS))))
+
+;; (=> (and
+;;      (instance ?REL VariableArityRelation)
+;;      (instance ?REL Predicate)
+;;      (?REL @ROW)
+;;      (=> (and
+;; 	  (domain ?REL ?N ?CLASS1)
+;; 	  (not (exists (?M)
+;; 		       (and (greaterThan ?M ?N)
+;; 			    (domain ?REL ?M ?CLASS2)))))
+;; 	 (forall (?M)
+;; 		 (and (greaterThan ?M ?N)
+;; 		      (equal ?A (ListOrderFn (ListFn @ROW) ?M))
+;; 		      (instance ?A ?CLASS1))))))
+
+;; (=>
+;;  (and
+;;   (instance ?REL VariableArityRelation)
+;;   (instance ?REL Predicate)
+;;   (?REL @ROW)
+;;   (equal ?L (ListFn @ROW)))
+;;  (argumentsType ?REL ?L 0 (ListLengthFn ?L)))
+
+;; (=> (and (argumentsType ?REL (ConsFn ?X ?L) ?N ?M)
+;; 	 (lessThan ?N ?M)
+;; 	 (domain ?REL ?N ?CLASS))
+;;     (and (instance ?X ?CLASS)
+;; 	 (argumentsType ?REL ?L (SucessorFn ?N) ?M)))
+
+;; (=> (and (argumentsType ?REL (ConsFn ?X ?L) ?N ?M)
+;; 	 (equal ?N ?M)
+;; 	 (domain ?REL ?N ?CLASS))
+;;     (and (instance ?X ?CLASS)
+;; 	 (restArgumentsType ?REL ?L ?CLAS)))
+
+;; (=> (restArgumentsType ?REL (ConsFn ?X ?L) ?CLASS)
+;;     (and (instance ?X ?CLASS)
+;; 	 (argumentsType ?REL ?L ?CLASS)))
+
+;; (argumentsType ?REL NullList ?N ?M)
+;; (restArgumentsType ?REL NullList ?CLASS)
+
+
 
 (subclass RelationExtendedToQuantities Relation)
 (subclass RelationExtendedToQuantities InheritableRelation)
