@@ -305,17 +305,6 @@ begin
  end
 
 
-include a72773 a72772 a72774 
-
-lemma l0' (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) := by simp *
-
-lemma l0  (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) :=
-begin
-  specialize a72773 BananaSlug10,
-  exact a72773 (and.intro a72772 a72774)
-end
-
-
 include a72771 a71371 a71872 a71369 a71340 a71669 a67315 a69763 a67177
         a67174 
 
@@ -405,6 +394,7 @@ begin
   exact ⟨ h5, a67174 ⟩,
 end
 
+include a72772 a72774
 
 lemma ins_banana_entity : ins BananaSlug10 Entity := 
 begin
@@ -461,7 +451,17 @@ begin
  exact h1.2 h0,
 end
 
-include a71370
+
+include a71370 a72773 
+
+lemma l0' (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) := by simp *
+
+lemma l0  (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) :=
+begin
+  specialize a72773 BananaSlug10,
+  exact a72773 (and.intro a72772 a72774)
+end
+
 
 theorem Banana_Invertebrate (hne: nonempty U) : ins BananaSlug10 Invertebrate :=
 begin
