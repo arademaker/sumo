@@ -93,8 +93,8 @@ variable a67172 : ∃ x : U, ins x Entity
 variable a67173 : ∀ c : U, ins c Class ↔ subclass c Entity
 variable a67818 : subclass PartialOrderingRelation TransitiveRelation
 
-variable a67809 : ∀ x y z : U, ins x SetOrClass ∧ ins y SetOrClass ∧ ins z SetOrClass → ins subclass_m TransitiveRelation → 
-  (subclass x y ∧ subclass y z → subclass x z)
+variable a67809 : ∀ x y z : U, ins x SetOrClass ∧ ins y SetOrClass ∧ ins z SetOrClass → 
+  ins subclass_m TransitiveRelation → (subclass x y ∧ subclass y z → subclass x z)
 
 variable a71382 : subclass Vertebrate Animal
 variable a71383 : subclass Invertebrate Animal
@@ -110,7 +110,6 @@ variable a67450 : subclass Relation Abstract
 
 -- commented in list.kif
 variable novo1 : ∀ (x L : U), ins L Entity → ins L List → ins (ConsFn x L) List
-variable novo5 : ¬ (Vertebrate = Invertebrate) 
 
 
 -- some initial tests
@@ -221,8 +220,7 @@ include a72767 a72768 a72769 a72770 a67959 a15 novo1 a67954 a67332 a67331
 
 lemma listLemma (hne : nonempty U) : ∀ x y z : U, 
   ins x Entity ∧ ins y Entity ∧ ins z Entity →
-    inList x (ListFn2 y z) →
-      x = y ∨ x = z :=
+  inList x (ListFn2 y z) → x = y ∨ x = z :=
 begin
   intros x y z h h1,
     rw (a72767 y z ⟨h.right.left, h.right.right⟩) at h1,
@@ -290,7 +288,7 @@ begin
   specialize h7 h4a,
   specialize h7 h3.right.left,
   have h12 : b = c1 ∨ b = c2,
-    apply (listLemma), 
+    apply listLemma, 
       repeat{assumption},
       split,
         apply a15 SetOrClass _ _,
@@ -306,7 +304,9 @@ begin
     exact h7.right
  end
 
-include a72773 a72774 a72772
+
+include a72773 a72772 a72774 
+
 lemma l0' (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) := by simp *
 
 lemma l0  (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) :=
@@ -315,31 +315,35 @@ begin
   exact a72773 (and.intro a72772 a72774)
 end
 
-include a71371 a71872 a71669 a69763 a71369 a71340 a67315 a67177 a67174 a72771 a71402 a72778
 
-lemma l1 (hne : nonempty U) : subclass Animal Entity :=
+include a72771 a71371 a71872 a71369 a71340 a71669 a67315 a69763 a67177
+        a67174 
+
+lemma subclass_animal_entity : subclass Animal Entity :=
 begin
-  have h : ins subclass_m TransitiveRelation,
-    apply subclass_TransitiveRelation; assumption,
-  apply (a67809 _ Physical _),
-    simp *,
-    assumption,
-    simp *,
-    apply (a67809 _ Object _),
-      simp *,
-      assumption,
-      simp *,w
-      apply (a67809 _  Agent _),
-        simp *,
-        assumption,
-        simp *,  
-        apply (a67809 _ Organism _),
-         simp *,
-         assumption,
-         simp *,  
+  have h1, apply subclass_TransitiveRelation; assumption,
+  have h2 : subclass Animal Agent,
+    apply a67809 _ Organism _,
+    exact ⟨a72771, ⟨ a71371, a71872 ⟩⟩,
+    exact h1,
+    exact ⟨a71369, a71340⟩,
+  have h3 : subclass Animal Object,
+    apply a67809 _ Agent _,
+    exact ⟨a72771, ⟨ a71872, a71669 ⟩⟩,
+    exact h1,
+    exact ⟨h2, a67315⟩,
+  have h4 : subclass Animal Physical,
+    apply a67809 _ Object _,
+    exact ⟨a72771, ⟨ a71669, a69763 ⟩⟩,
+    exact h1,
+    exact ⟨h3, a67177⟩,
+  apply a67809 _ Physical _,
+  exact ⟨a72771, ⟨ a69763, a67331 ⟩⟩,
+  exact h1,
+  exact ⟨ h4, a67174 ⟩,
 end
 
-include a67173 a71370 a71382 a71383
+include a71402 a71382 
 
 lemma subclass_vertebrate_entity : subclass Vertebrate Entity :=
 begin
@@ -369,6 +373,8 @@ begin
   exact h1,
   exact ⟨ h5, a67174 ⟩,
 end
+
+include a72778 a71383 
 
 lemma subclass_invertebrate_entity : subclass Invertebrate Entity :=
 begin
@@ -429,6 +435,7 @@ begin
  exact and.intro a67174 h5,
 end
 
+include a67173
 
 lemma ins_vertebrate_class : ins Vertebrate Class :=
 begin
@@ -446,6 +453,15 @@ begin
  exact h1.2 h0,
 end
 
+lemma ins_animal_class : ins Animal Class :=
+begin
+ have h0 : subclass Animal Entity,
+  apply subclass_animal_entity; assumption,
+ have h1, from (a67173 Animal),
+ exact h1.2 h0,
+end
+
+include a71370
 
 theorem Banana_Invertebrate (hne: nonempty U) : ins BananaSlug10 Invertebrate :=
 begin
@@ -460,7 +476,7 @@ begin
  apply h3,
  exact ⟨ a72771, ⟨ a71402, a72778 ⟩⟩,
  have h₁ : subclass Animal Entity, 
-   apply l1; assumption,
+   apply subclass_animal_entity; assumption,
  have h₂ : ins Animal Class,
    rw a67173, 
    exact h₁,
@@ -472,215 +488,4 @@ begin
   apply ins_banana_entity; assumption,
  exact and.intro h₂ (and.intro h₃ (and.intro h₄ h₅)),
  exact and.intro a71370 (and.intro a72772 h1),
-end
-
-
-omit a67131 a67115 a67809 a67448 a68771 a67331 a15 a72180 a71844 a67818 a13 a67446 
-     a67332 a72767 a72768 a72769 a72770 a67959  novo1 a67954 a68763 a67958 a67450
-
-omit a72773 a72774 a72772
-
-
-lemma l2 (hne : nonempty U) : subclass Vertebrate Entity :=
-begin
-  have h : ins subclass_m TransitiveRelation,
-    apply subclass_TransitiveRelation; assumption,
-  have h1 : subclass Animal Entity,
-    apply l1; 
-    assumption,
-  apply a67809 _ Animal _,
-  simp *,
-  assumption,
-  simp *,
-end
-
-omit a71382 a71402
-
-include a72778 a71383
-
-lemma l3 (hne : nonempty U) : subclass Invertebrate Entity :=
-begin
-  have h : ins subclass_m TransitiveRelation,
-    apply subclass_TransitiveRelation; assumption,
-  have h1 : subclass Animal Entity,
-    apply l1; assumption,
-  apply a67809 _ Animal _,
-  simp *,
-  assumption,
-  simp *,
-end
-
-lemma l4 (hne : nonempty U): ins Invertebrate Class :=
-begin
-  rw a67173,
-  apply l3, repeat { assumption }
-end
-
-omit a72771 a71371 a71872 a71669 a69763 a71369 a71340 a67315 a67177 a67174 a72778  
-
-
-include a72770 a72767 novo1 a67959 a67958 a67954 a67450 a15 a68771 a67332  a72769 
-        a68763 a67331 
-
-lemma listLemma (hne : nonempty U) : ∀ x y z : U, 
-  ins x Entity ∧ ins y Entity ∧ ins z Entity →
-    inList x (ListFn2 y z) →
-      x = y ∨ x = z :=
-begin
-  intros x y z h h1,
-    rw (a72767 _ _ h.right) at h1,
-    have h2 : x = y ∨ inList x (ConsFn z NullList_m),
-      rw ←(a72770 (ConsFn z NullList_m) x y),
-      exact h1,
-      simp *,
-      apply novo1 z NullList_m,
-        apply a15 Abstract Entity NullList_m;
-          simp *, 
-          apply a15 Relation Abstract NullList_m;
-            simp *, 
-            apply a15 List Relation NullList_m;
-              simp *,
-        assumption,
-    cases h2,
-      exact or.inl h2,
-      have h3 : x = z ∨ inList x NullList_m,
-        rw ←(a72770 NullList_m x z),
-        exact h2,
-        simp *,
-      cases h3,
-        exact or.inr h3,
-        apply false.elim,
-          exact ((a72769 x) h.left) h3 
-end
-omit a72770 a72767 novo1 a67959 a67958 a67954 a67450 a15 a68771 a67332 
-     a72769 a68763 a67331 a67173
-
-include a13 a15 a67331 a71844 a72180 a67818 
-        a67809 a71383 a67173 a67448 
-        a68771 a67446 a67332 a71402 novo1 a67954 a67450 a67131 a67115 a71370 
-        a72772 a67958 a67959 a72770  a72767 a72761 a72774 a71382 a72769 a68763
-
-lemma BS10VI (hne : nonempty U) : 
-  ins BananaSlug10 Vertebrate ∨ ins BananaSlug10 Invertebrate :=
-begin
-  have h : ins subclass_m TransitiveRelation,
-    apply subclass_TransitiveRelation; assumption,
-  have h₁ : subclass Animal Entity, 
-    apply l1; assumption,
-  have h₃ : subclass SetOrClass Entity, 
-    apply (a67809 _ Abstract _), 
-    simp *, assumption, simp *, 
-  have h : ins Animal Class,
-    rw a67173, 
-    exact h₁,
-  have h₄ : ins Vertebrate Entity, 
-    apply (a15 SetOrClass _ _); 
-    simp * ,
-  have h₅ : ins Invertebrate Entity,
-    apply (a15 SetOrClass _ _);  
-    simp *,
-  have h1 : subclass Vertebrate Entity, 
-    apply l2; 
-    assumption,
-  have h2, apply l4, repeat { assumption },
-  have h3 : exhaustiveDecomposition3 Animal Vertebrate Invertebrate ∧ disjointDecomposition3 Animal Vertebrate Invertebrate, 
-    from 
-       begin 
-         rw ←(a67131 Animal Vertebrate Invertebrate), 
-         simp *
-       end,
-  have h4, from begin exact (a67115 Animal Vertebrate Invertebrate BananaSlug10) end,
-  cases h4 with x h4_x,
-  have h5 : inList x (ListFn2 Vertebrate Invertebrate) ∧ ins BananaSlug10 x, 
-    from 
-      begin 
-        apply h4_x.right,
-        apply (a16 Animal Entity BananaSlug10), simp *,
-        simp *,
-        simp *,
-        exact h3.left,
-        assumption
-      end,
-  have h6 : inList x (ConsFn Vertebrate (ConsFn Invertebrate NullList_m)), from
-    begin
-      have q : ListFn2 Vertebrate Invertebrate = ConsFn Vertebrate (ConsFn Invertebrate NullList_m), from 
-        begin
-          apply (a72767 Vertebrate Invertebrate),
-          simp *,
-        end,
-      rw ←q,
-      exact h5.left
-    end,
-  have h7: x = Vertebrate ∨ inList x (ConsFn Invertebrate NullList_m), from
-    begin
-      rw ←(a72770 (ConsFn Invertebrate NullList_m) x Vertebrate),
-      simp * --?
-    end,
-  cases h7,
-    rw ←h7,
-    exact or.inl h5.right,
-    have h8 : x = Invertebrate ∨ inList x NullList_m, from
-      begin
-        rw ←(a72770 NullList_m x Invertebrate), 
-        simp *
-      end,
-    cases h8,
-      rw ←h8,
-      exact or.inr h5.right,
-      apply false.elim,
-        apply a72769 x,
-          apply a16 SetOrClass Entity x,
-            simp *, simp *,
-        assumption
-end
-
-lemma BS10VI2 (hne: nonempty U) : 
- ins BananaSlug10 Vertebrate ∨ ins BananaSlug10 Invertebrate :=
-begin 
-  have h  : ins subclass_m TransitiveRelation, 
-    apply subclass_TransitiveRelation; assumption,
-  have h1 : subclass Animal Entity, 
-    apply l1 ; assumption,
-  have h2 : subclass Vertebrate Entity, 
-    apply l2; repeat { assumption },
-  have h3 : subclass Invertebrate Entity, 
-    apply l3; assumption,
-  have h4 : subclass SetOrClass Entity,
-    apply (a67809 _ Abstract _); simp *, 
-  have h5 : ins Vertebrate Entity,
-    apply (a15 SetOrClass _ _); simp *,
-  have h6 : ins Invertebrate Entity,
-    apply (a15 SetOrClass _ _); simp *,
-  have h7 : exhaustiveDecomposition3 Animal Vertebrate Invertebrate ∧
-            disjointDecomposition3 Animal Vertebrate Invertebrate,
-    rw ←a67131, 
-    exact a71370, simp *,
-  cases (a67115 Vertebrate Invertebrate Animal BananaSlug10) with x h8,
-    have h9 : inList x (ListFn2 Vertebrate Invertebrate) ∧ ins BananaSlug10 x,
-      apply h8.right,
-        apply a15 Animal _ _;
-          simp *,
-        simp *,
-        exact h7.left,
-        exact a72772,
-    have h10 : x = Vertebrate ∨ x = Invertebrate,
-      apply listLemma, repeat{assumption},
-      simp *,
-      apply a15 SetOrClass _ _; 
-        simp *,
-      exact h9.left,
-    cases h10;
-      rw ←h10,
-      exact or.inl h9.right,
-      exact or.inr h9.right,
-end
-
-include a72773 
-theorem goal (hne: nonempty U) : ins BananaSlug10 Invertebrate :=
-begin
-  have h, from begin apply BS10VI, repeat{ assumption } end,
-  cases h,
-  apply false.elim,
-    apply l0, 
-   repeat { assumption } 
 end
