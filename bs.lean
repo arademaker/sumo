@@ -67,6 +67,7 @@ variable a69763 : ins Physical SetOrClass
 variable a67331 : ins Entity SetOrClass
 variable a67448 : ins SetOrClass SetOrClass
 variable a68771 : ins Abstract SetOrClass
+variable a68763 : ins Relation SetOrClass
 variable a71844 : ins TransitiveRelation SetOrClass
 variable a72180 : ins PartialOrderingRelation SetOrClass
 
@@ -81,9 +82,9 @@ variable a67115 :
     ∃ (item : U),
       ins item SetOrClass ∧
         (ins obj Entity →
-          ins row1 SetOrClass ∧ ins row1 Class ∧ 
+          ins c SetOrClass ∧ ins c Class ∧ 
           ins row0 Class ∧ ins row0 Entity ∧ 
-          ins c Class ∧ ins c Entity →
+          ins row1 Class ∧ ins row1 Entity →
             exhaustiveDecomposition3 c row0 row1 → ins obj c → 
               inList item (ListFn2 row0 row1) ∧ ins obj item)
 
@@ -104,29 +105,16 @@ variable a67177 : subclass Object Physical
 variable a67174 : subclass Physical Entity
 variable a67446 : subclass SetOrClass Abstract
 variable a67332 : subclass Abstract Entity
+variable a67954 : subclass List Relation
+variable a67450 : subclass Relation Abstract
 
 -- commented in list.kif
 variable novo1 : ∀ (x L : U), ins L Entity → ins L List → ins (ConsFn x L) List
-
-variable a67954 : subclass List Relation
-variable a67450 : subclass Relation Abstract
-variable a68763 : ins Relation SetOrClass
 
 variable novo5 : ¬ (Vertebrate = Invertebrate) 
 
 
 -- starting proofs
-
-/-
-include a72761 a72767 a72768 a72769 a72770 a67959 a15 
-lemma listLemma (hne : nonempty U) : ∀ x y z : U, 
-  ins x Entity ∧ ins y Entity ∧ ins z Entity →
-    inList x (ListFn2 y z) →
-      x = y ∨ x = z :=
-begin
-  admit
-end
--/
 
 -- some initial tests
 
@@ -243,14 +231,49 @@ omit a15 a72180 a71844 a13 a67818 a71402 a72771 a71371
      a71369 a67809 a71382 a67174 a69763 a67331 a71669 a71340 
      a67315 a67177 a71872
 
+include a72767 a72768 a72769 a72770 a67959 a15 novo1 a67954 a67332 a67331 a68771 a68763 a67958 a67450
+
+lemma listLemma (hne : nonempty U) : ∀ x y z : U, 
+  ins x Entity ∧ ins y Entity ∧ ins z Entity →
+    inList x (ListFn2 y z) →
+      x = y ∨ x = z :=
+begin
+  intros x y z h h1,
+    rw (a72767 y z ⟨h.right.left, h.right.right⟩) at h1,
+    have h2 : x = y ∨ inList x (ConsFn z NullList_m),
+      rw ←(a72770 (ConsFn z NullList_m) x y),
+      exact h1,
+      simp *,
+      apply novo1 z NullList_m,
+         apply a15 Abstract Entity NullList_m;
+           simp *, 
+           apply a15 Relation Abstract NullList_m;
+             simp *,
+             apply a15 List Relation NullList_m;
+               simp *,
+               assumption,
+      cases h2,
+        exact or.inl h2,
+        have h3 : x = z ∨ inList x NullList_m,
+          rw ←(a72770 NullList_m x z),
+          exact h2,
+          exact ⟨h.1, ⟨h.2.2, a67959⟩⟩,
+          cases h3,
+            exact or.inr h3,
+            apply false.elim,
+              exact ((a72769 x) h.left) h3
+end
+
+omit a72767 a72768 a72769 a72770 a67959 a15 novo1 a67954 a67332 a67331 a68771 a68763 a67958 a67450
 
 -- start proofs
 
-include a67131 a67115
-lemma lX : ∀ x c c1 c2,
-(ins c Entity ∧ ins c1 Entity ∧ ins c2 Entity ∧ ins Class SetOrClass ∧ ins Entity SetOrClass) →
+include a67131 a67115 a67809 a67448 a68771 a67331 a15 a72180 a71844 a67818 a13 a67446 a67332 a72767 a72768 a72769 a72770 a67959  novo1 a67954 a68763 a67958 a67450
+
+lemma lX (hne : nonempty U) : ∀ x c c1 c2,
+(ins c SetOrClass ∧ ins c1 SetOrClass ∧ ins c2 SetOrClass) →
   (ins c Class ∧ ins c1 Class ∧ ins c2 Class ∧ ins x Entity) → 
-    (partition3 c c1 c2 ∧ ¬ ins x c1) → ins x c2 := 
+    (partition3 c c1 c2 ∧ ins x c ∧ ¬ ins x c1) → ins x c2 := 
 begin
   intros a c c1 c2 h1 h2 h3,
   specialize a67131 c c1 c2,
@@ -258,13 +281,44 @@ begin
   have h₃, from a67131 ⟨ h2.1, ⟨h2.2.1, h2.2.2.1 ⟩⟩,
   have h4, from iff.elim_left h₃ h3.1,
   cases h4 with h4a h4b,
-  cases a67115 with c2 h5,
+  cases a67115 with b h5,
   have h7, from h5.right,
   have h8, from h2.right.right.right,
   specialize h7 h8,
-  specialize h7 ⟨ h5.left, ⟨h2.right.right.left, ⟨ h2.right.left ⟩⟩⟩ 
+  have h9 : subclass SetOrClass Entity,
+    apply (a67809 _ Abstract _), 
+      exact ⟨a67448, ⟨a68771, a67331⟩⟩,
+      apply subclass_TransitiveRelation; assumption,
+      exact ⟨a67446, a67332⟩,
+  have h10 : ins c1 Entity,
+    apply (a15 SetOrClass _ _), 
+      exact ⟨a67448, a67331⟩,
+      exact ⟨h9, h1.2.1⟩,
+  have h11 : ins c2 Entity,
+    apply (a15 SetOrClass _ _), 
+      exact ⟨a67448, a67331⟩,
+      exact ⟨h9, h1.2.2⟩,
+  specialize h7 ⟨h1.1, ⟨h2.1, ⟨h2.2.1, ⟨h10, ⟨h2.2.2.1, h11⟩⟩⟩⟩⟩,
+  specialize h7 h4a,
+  specialize h7 h3.right.left,
+  have h12 : b = c1 ∨ b = c2,
+    apply (listLemma), 
+      repeat{assumption},
+      split,
+        apply a15 SetOrClass _ _,
+          exact ⟨a67448, a67331⟩,
+          exact ⟨h9, h5.left⟩,
+      exact ⟨h10, h11⟩,
+      exact h7.left,
+  cases h12,
+    rw h12 at h7,
+    apply false.elim,
+      exact h3.right.right h7.right,
+    rw ←h12,
+    exact h7.right
  end
-omit a67131 a67115
+
+omit a67131 a67115 a67809 a67448 a68771 a67331 a15 a72180 a71844 a67818 a13 a67446 a67332 a72767 a72768 a72769 a72770 a67959  novo1 a67954 a68763 a67958 a67450
 
 
 include a72773 a72774 a72772
