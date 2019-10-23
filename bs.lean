@@ -289,7 +289,7 @@ begin
   specialize h7 h3.right.left,
   have h12 : b = c1 ∨ b = c2,
     apply listLemma, 
-      repeat{assumption},
+      repeat { assumption },
       split,
         apply a15 SetOrClass _ _,
           exact ⟨a67448, a67331⟩,
@@ -427,21 +427,6 @@ end
 
 include a67173
 
-lemma ins_vertebrate_class : ins Vertebrate Class :=
-begin
- have h0 : subclass Vertebrate Entity,
-  apply subclass_vertebrate_entity; assumption,
- have h1, from (a67173 Vertebrate),
- exact h1.2 h0,
-end
-
-lemma ins_invertebrate_class : ins Invertebrate Class :=
-begin
- have h0 : subclass Invertebrate Entity,
-  apply subclass_invertebrate_entity; assumption,
- have h1, from (a67173 Invertebrate),
- exact h1.2 h0,
-end
 
 lemma ins_animal_class : ins Animal Class :=
 begin
@@ -455,7 +440,6 @@ end
 include a71370 a72773 
 
 lemma l0' (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) := by simp *
-
 lemma l0  (hne : nonempty U) : ¬(ins BananaSlug10 Vertebrate) :=
 begin
   specialize a72773 BananaSlug10,
@@ -478,14 +462,17 @@ begin
  have h₁ : subclass Animal Entity, 
    apply subclass_animal_entity; assumption,
  have h₂ : ins Animal Class,
-   rw a67173, 
-   exact h₁,
- have h₃ : ins Vertebrate Class, 
-  apply ins_vertebrate_class; assumption,
- have h₄ : ins Invertebrate Class, 
-  apply ins_invertebrate_class; assumption,
- have h₅ : ins BananaSlug10 Entity, 
+   rw a67173, exact h₁,
+ have h₃ : subclass Vertebrate Entity,
+   apply subclass_vertebrate_entity; assumption,
+ have h₄ : ins Vertebrate Class, 
+   rw a67173, exact h₃,
+ have h₅ : subclass Invertebrate Entity,
+   apply subclass_invertebrate_entity; assumption,
+ have h₆ : ins Invertebrate Class, 
+  rw a67173, exact h₅,
+ have h₇ : ins BananaSlug10 Entity, 
   apply ins_banana_entity; assumption,
- exact and.intro h₂ (and.intro h₃ (and.intro h₄ h₅)),
+ exact and.intro h₂ (and.intro h₄ (and.intro h₆ h₇)),
  exact and.intro a71370 (and.intro a72772 h1),
 end
