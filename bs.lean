@@ -476,3 +476,9 @@ begin
  exact and.intro h₂ (and.intro h₄ (and.intro h₆ h₇)),
  exact and.intro a71370 (and.intro a72772 h1),
 end
+
+
+example (X Y C : U) (h : partition3 C X Y) : subclass X C ∧ subclass Y C := sorry
+
+example (h : ins SetOrClass SetOrClass) : false := sorry
+
