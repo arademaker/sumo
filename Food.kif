@@ -106,10 +106,9 @@ is a material that makes up ?FOOD")
       (instance ?PROC Process)
       (instance ?X ?ING)
       (patient ?PROC ?X)
-      (instance ?Y ?ING)
+      (instance ?Y ?FOOD)
       (result ?PROC ?Y))))
       
-
 (instance ingredientAmount TernaryRelation)
 (documentation ingredientAmount EnglishLanguage "(&%ingredientAmount ?ING ?FOOD ?AMT 
 means that ?AMT of ?ING is used to make ?FOOD")
@@ -321,10 +320,12 @@ inhabit &%BodiesOfWater")
 ;; if S is an instance of seafood, then s is a part of a dead animal who when it was
 ;; alive lived in a body of water
 (=>
-  (instance ?S Seafood)
+  (and
+    (instance ?S ?C)
+    (subclass ?C Seafood))
   (exists (?X ?SEA)
     (and
-      (meatOfAnimal ?S ?ANIMAL)
+      (meatOfAnimal ?C ?ANIMAL)
       (instance ?X ?ANIMAL)
       (instance ?SEA BodyOfWater)
       (inhabits ?X ?SEA))))
