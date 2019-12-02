@@ -804,8 +804,8 @@ node of the ontology.")
 
 ;; Informally, it is true that "Everything is Entity";
 ;; We comment out this axiom to avoid logical paradoxes.
-;;(forall (?THING)
-;;  (instance ?THING Entity))
+(forall (?THING)
+  (instance ?THING Entity))
 
 (exists (?THING)
   (instance ?THING Entity))
@@ -3012,10 +3012,10 @@ of the two &%Lists that are given as arguments.  For example, the value of
 (&%inList ?OBJ ?LIST) means that ?OBJ is in the &%List ?LIST.  For example,
 (&%inList &%Tuesday (&%ListFn &%Monday &%Tuesday &%Wednesday)) would be true.")
 
-(=>
-   (inList ?ITEM ?LIST)
-   (exists (?NUMBER)
-      (equal (ListOrderFn ?LIST ?NUMBER) ?ITEM)))
+;; (=>
+;;    (inList ?ITEM ?LIST)
+;;    (exists (?NUMBER)
+;;       (equal (ListOrderFn ?LIST ?NUMBER) ?ITEM)))
 
 (instance subList BinaryPredicate)
 (instance subList PartialOrderingRelation)

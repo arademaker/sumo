@@ -13,26 +13,66 @@
        (ConsFn ?X (ListFn @ROW)))
 
 (equal (ListFn ?X ?Y)
-       (ConsFn ?X (ConsFn ?Y NullList)))
-
+       (ConsFn ?X (ListFn ?Y)))
+       
 (equal (ListFn ?X)
        (ConsFn ?X NullList))
 
-;; (isList NullList)
-;; (=> (isList ?X) (isList (ConsFn ?Y ?X)))
-;; (<=> (isList ?L) (instance ?L List))
 
 (not (inList ?X NullList))
 
 (<=> (inList ?X (ConsFn ?Y ?L))
-         (or (equal ?X ?Y)
-	     (inList ?X ?L)))
+     (or (equal ?X ?Y)
+  	 (inList ?X ?L)))
+
+
+(equal (ListOrderFn (ListFn ?X @ROW) 1)
+       ?X)
+
+(equal (ListOrderFn (ListFn ?X) 1)
+       ?X)
+       
+(equal (ListOrderFn (ListFn ?X @ROW) (SucessorFn ?N))
+       (ListOrderFn (ListFn @ROW) ?N))
+
+(equal (ListOrderFn NullList ?N)
+       NullList)
+
+
+(instance 0  NonnegativeInteger)
+(instance 1  PositiveInteger)
+(instance 2  PositiveInteger)
+(instance 3  PositiveInteger)
+(instance 4  PositiveInteger)
+(instance 5  PositiveInteger)
+(instance 6  PositiveInteger)
+(instance 7  PositiveInteger)
+(instance 8  PositiveInteger)
+(instance 9  PositiveInteger)
+(instance 10 PositiveInteger)
+
+(equal 1  (SucessorFn 0))
+(equal 2  (SucessorFn 1))
+(equal 3  (SucessorFn 2))
+(equal 4  (SucessorFn 3))
+(equal 5  (SucessorFn 4))
+(equal 6  (SucessorFn 5))
+(equal 7  (SucessorFn 6))
+(equal 8  (SucessorFn 7))
+(equal 9  (SucessorFn 8))
+(equal 10 (SucessorFn 9))
+
 
 ;; (instance aE Entity)
 ;; (instance bE Entity)
-
 ;; (equal (ListFn bE aE) (ConsFn bE (ConsFn aE NullList)))
 ;; (inList aE (ConsFn bE (ConsFn aE NullList)))
 ;; (inList bE (ConsFn bE (ConsFn aE NullList)))
 ;; (inList aE (ListFn bE aE))
 ;; (inList bE (ListFn bE aE))
+
+(equal (ListFn ?B ?A) (ConsFn ?B (ConsFn ?A NullList)))
+(inList ?B (ConsFn ?B (ConsFn ?A NullList)))
+(inList ?B (ListFn ?A ?B))
+(equal (ListOrderFn (ListFn ?X1 ?X2 ?X3) 2) ?X2)
+(instance NullList Entity)
