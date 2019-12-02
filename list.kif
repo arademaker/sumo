@@ -32,11 +32,8 @@
 (equal (ListOrderFn (ListFn ?X) 1)
        ?X)
        
-(equal (ListOrderFn (ListFn ?X @ROW) (SucessorFn ?N))
-       (ListOrderFn (ListFn @ROW) ?N))
-
-(equal (ListOrderFn NullList ?N)
-       NullList)
+(equal (ListOrderFn (ConsFn ?X (ListFn ?Y @ROW)) (SucessorFn ?N))
+       (ListOrderFn (ListFn ?Y @ROW) ?N))
 
 
 (instance 0  NonnegativeInteger)
