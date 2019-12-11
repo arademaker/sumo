@@ -14,6 +14,9 @@
 
 (equal (ListFn ?X ?Y)
        (ConsFn ?X (ListFn ?Y)))
+
+(equal (ListFn ?X ?Y ?Z)
+       (ConsFn ?X (ConsFn ?Y (ListFn ?Z)))
        
 (equal (ListFn ?X)
        (ConsFn ?X NullList))
@@ -31,10 +34,9 @@
 
 (equal (ListOrderFn (ListFn ?X) 1)
        ?X)
-       
-(equal (ListOrderFn (ConsFn ?X (ListFn ?Y @ROW)) (SucessorFn ?N))
-       (ListOrderFn (ListFn ?Y @ROW) ?N))
 
+(equal (ListOrderFn (ListFn ?X ?Y @ROW) (SucessorFn ?N))
+       (ListOrderFn (ListFn ?Y @ROW) ?N))
 
 (instance 0  NonnegativeInteger)
 (instance 1  PositiveInteger)
